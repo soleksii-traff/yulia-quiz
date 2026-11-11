@@ -1,0 +1,360 @@
+/* Квиз «Что мешает тебе брать от жизни всё?»
+   Фирменный стиль Юлии: графит, золото, Lora. Один тёмный вид по выбору.
+   Раскладка: одна колонка-переписка до 520 px, ответы внизу под большой палец. */
+:root {
+  --bg: #19181b;          /* графит с тёплым оттенком */
+  --surface: #232126;     /* пузыри Юлии, карточки */
+  --surface-2: #2c2a30;   /* наведение, выбранная карточка */
+  --line: #3a3740;
+  --ink: #f3eee6;         /* тёплый белый */
+  --ink-2: #b4ada3;       /* второстепенный текст */
+  --gold: #c9a45c;
+  --gold-soft: rgba(201, 164, 92, 0.14);
+  --gold-ink: #1b1710;    /* текст на золотой кнопке */
+  --font-display: "Lora", Georgia, "Times New Roman", serif;
+  --font-body: "Golos Text", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --r: 18px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 24px;
+}
+
+.draft {
+  margin: 10px 0 0;
+  padding: 6px 12px;
+  border: 1px dashed var(--gold);
+  border-radius: 10px;
+  color: var(--gold);
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+}
+
+/* Верхняя полоса: назад, прогресс, счётчик */
+.top {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--bg);
+  display: grid;
+  grid-template-columns: 40px 1fr auto 40px;
+  align-items: center;
+  gap: 12px;
+  padding-block: 14px 10px;
+}
+.back {
+  width: 40px; height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: grid; place-items: center;
+}
+.back:disabled { visibility: hidden; }
+.bar { height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--gold); border-radius: 4px; transition: width .4s ease; }
+.count { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
+
+/* Переписка */
+.chat { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
+.who { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--gold-soft); border: 1px solid var(--gold);
+  color: var(--gold); font-family: var(--font-display); font-weight: 600; font-size: 15px;
+  display: grid; place-items: center; overflow: hidden; flex: none;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.who b { display: block; font-weight: 600; font-size: 15px; }
+.who span { display: block; font-size: 12.5px; color: var(--ink-2); }
+
+.msg {
+  max-width: 88%;
+  padding: 12px 16px;
+  border-radius: var(--r) var(--r) var(--r) 6px;
+  background: var(--surface);
+  animation: rise .35s ease both;
+}
+.msg.q { font-family: var(--font-display); font-size: 21px; line-height: 1.32; padding: 16px 18px; text-wrap: balance; }
+.msg.me {
+  align-self: flex-end;
+  border-radius: var(--r) var(--r) 6px var(--r);
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+}
+.typing { display: inline-flex; gap: 4px; padding: 14px 16px; }
+.typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-2); animation: blink 1s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; }
+.typing i:nth-child(3) { animation-delay: .3s; }
+
+/* Ответы */
+.answers { display: grid; gap: 10px; padding-top: 18px; }
+.opt {
+  text-align: left;
+  min-height: 56px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: transparent;
+  cursor: pointer;
+  line-height: 1.35;
+  transition: border-color .15s, background .15s, transform .15s;
+  animation: rise .3s ease both;
+}
+@media (hover: hover) { .opt:hover { border-color: var(--ink-2); background: var(--surface); } }
+.opt.on { border-color: var(--gold); background: var(--gold-soft); transform: scale(1.01); }
+.answers.locked .opt:not(.on) { opacity: .35; }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; min-height: 56px; padding: 14px 20px;
+  border: 0; border-radius: 28px;
+  background: var(--gold); color: var(--gold-ink);
+  font-weight: 600; font-size: 17px; letter-spacing: .01em;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(201, 164, 92, .25);
+}
+.btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); box-shadow: none; }
+.link { background: none; border: 0; color: var(--ink-2); text-decoration: underline; cursor: pointer; padding: 8px; font-size: 14px; }
+
+/* Подсчёт */
+.calc { flex: 1; display: grid; place-content: center; justify-items: center; gap: 18px; text-align: center; min-height: 60vh; }
+.crown { width: 132px; color: var(--gold); }
+.crown svg { display: block; width: 100%; height: auto; }
+.crown mask path { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .45s cubic-bezier(.5, 0, .3, 1) forwards; animation-delay: calc(var(--i) * .3s); }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.calc p { font-family: var(--font-display); font-size: 20px; margin: 0; }
+
+/* Результат */
+.res { display: flex; flex-direction: column; gap: 22px; padding-top: 8px; }
+.eyebrow { font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin: 0; }
+.res h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(30px, 8vw, 40px); line-height: 1.1; margin: 6px 0 0; text-wrap: balance; }
+.res h1 em { font-style: italic; color: var(--gold); }
+.profile { display: grid; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r); }
+.prow { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; font-size: 14.5px; }
+.prow .pbar { grid-column: 1 / -1; height: 8px; border-radius: 8px; background: var(--line); overflow: hidden; }
+.prow .pbar i { display: block; height: 100%; width: 0; background: var(--ink-2); border-radius: 8px; transition: width .9s cubic-bezier(.2,.8,.2,1); }
+.prow.lead { color: var(--ink); font-weight: 600; }
+.prow.lead .pbar i { background: var(--gold); }
+.prow:not(.lead) { color: var(--ink-2); }
+.prow .n { font-variant-numeric: tabular-nums; }
+.rtext { display: flex; flex-direction: column; gap: 14px; font-size: 16.5px; }
+.rtext p { margin: 0; }
+.rtext .strategy { font-family: var(--font-display); font-size: 20px; line-height: 1.35; }
+.rtext h3 { margin: 12px 0 0; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+.life { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.life li { padding-left: 16px; border-left: 2px solid var(--line); }
+.life b { font-weight: 600; }
+.change { padding: 16px; border: 1px solid var(--gold); background: var(--gold-soft); border-radius: var(--r); margin-top: 6px; }
+.change small { display: block; font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.change p { font-size: 17px; }
+
+/* Перед результатами */
+.before { display: grid; gap: 12px; max-width: 440px; }
+.before p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+.before p:first-child { color: var(--ink); font-family: var(--font-display); font-size: 19px; }
+.before .btn { margin-top: 10px; }
+.crown.done mask path { animation: none; stroke-dashoffset: 0; }
+
+/* Последний экран: лекция */
+.final { display: flex; flex-direction: column; gap: 18px; padding-top: 28px; }
+.final .crown { align-self: center; width: 110px; }
+.final .ftext { margin: 0; font-size: 18px; text-align: center; }
+.final h2 { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: clamp(26px, 7vw, 32px); line-height: 1.15; margin: 0 0 6px; text-align: center; color: var(--gold); text-wrap: balance; }
+
+/* Вопрос: сцена с заголовком, буквы у ответов, пометка под кнопкой */
+.msg .qt { display: block; font-family: var(--font-display); font-size: 18px; color: var(--gold); margin-bottom: 6px; }
+.msg.scene { font-size: 16px; }
+.opt { display: flex; gap: 12px; align-items: flex-start; }
+.opt .lt { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-size: 13px; font-weight: 600; color: var(--gold); margin-top: -1px; }
+.opt.on .lt { border-color: var(--gold); }
+.note { margin: 4px 0 0; font-size: 11px; line-height: 1.4; color: var(--ink-2); opacity: .85; }
+.direct { display: grid; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r); }
+.direct p { font-size: 15.5px; }
+.word { color: var(--gold); font-weight: 700; letter-spacing: .06em; }
+.restart { text-align: center; }
+
+.sticky {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(to top, var(--bg) 70%, rgba(25, 24, 27, 0));
+}
+.sticky .btn { max-width: 488px; margin: 0 auto; }
+
+/* Баннер cookies */
+.consent {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding: 16px max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: var(--surface); border-top: 1px solid var(--line);
+}
+.consent > div { max-width: 488px; margin: 0 auto; display: grid; gap: 12px; }
+.consent p { margin: 0; font-size: 14px; color: var(--ink-2); }
+.consent a { color: var(--ink); }
+.consent .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.consent .btn { min-height: 48px; font-size: 15px; box-shadow: none; }
+.consent .btn.ghost { color: var(--ink); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes blink { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .crown mask path { stroke-dashoffset: 0; }
+}
+@media (max-width: 380px) {
+  .msg.q { font-size: 19px; }
+}
+
+.sheet {
+  position: fixed; inset: 0; z-index: 30; background: var(--bg);
+  display: grid; place-items: center; overflow-y: auto;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.sheet > div { width: 100%; max-width: 360px; display: grid; gap: 14px; text-align: center; }
+.sheet img { width: 100%; border-radius: 14px; border: 1px solid var(--line); }
+.sheet p { margin: 0; color: var(--ink-2); font-size: 14px; }
+
+/* =====================================================================
+   Оформление. data-layout="journal" — журнальная вёрстка.
+   data-palette: dark (графит, по умолчанию) или light (слоновая кость),
+   переключается кнопкой вверху. По умолчанию — theme в config.js.
+   ===================================================================== */
+.cover { display: none; }
+
+/* --- общая полировка тёмной палитры --- */
+html[data-palette="dark"] body {
+  background:
+    radial-gradient(120% 55% at 50% -12%, rgba(201, 164, 92, .11), transparent 62%),
+    var(--bg);
+  background-attachment: fixed;
+}
+html[data-palette="dark"] .top { background: rgba(25, 24, 27, .78); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+html[data-palette="dark"] .btn:not(.ghost) { background: linear-gradient(135deg, #dcbd7a 0%, #c9a45c 45%, #b08843 100%); box-shadow: 0 8px 28px rgba(201, 164, 92, .18); }
+
+/* --- светлая палитра: слоновая кость, графит, приглушённое золото --- */
+html[data-palette="light"] {
+  --bg: #f6f1e9;
+  --surface: #fffdf9;
+  --surface-2: #efe7da;
+  --line: #e2d8c8;
+  --ink: #26221e;
+  --ink-2: #70675c;
+  --gold: #a47c37;
+  --gold-soft: rgba(164, 124, 55, .09);
+  --gold-ink: #fbf7f0;
+  color-scheme: light;
+}
+html[data-palette="light"] body {
+  background:
+    radial-gradient(120% 55% at 50% -12%, rgba(164, 124, 55, .10), transparent 62%),
+    var(--bg);
+  background-attachment: fixed;
+}
+html[data-palette="light"] .top { background: rgba(246, 241, 233, .82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+html[data-palette="light"] .btn:not(.ghost) { background: var(--ink); color: var(--bg); box-shadow: none; }
+html[data-palette="light"] .btn.ghost { border-color: var(--ink); color: var(--ink); }
+html[data-palette="light"] .change { background: #fffaf0; }
+
+/* --- журнальная вёрстка --- */
+html[data-layout="journal"] { --r: 3px; }
+html[data-layout="journal"] .back { border: 0; }
+html[data-layout="journal"] .bar { height: 2px; border-radius: 0; }
+html[data-layout="journal"] .bar > i { border-radius: 0; }
+html[data-layout="journal"] .chat:not(.intro) .who { display: none; }
+html[data-layout="journal"] .msg { background: none; border: 0; padding: 0; border-radius: 0; max-width: 100%; }
+html[data-layout="journal"] .msg.me { display: none; }
+html[data-layout="journal"] .typing { padding: 8px 0; }
+html[data-layout="journal"] .msg[data-n]::before {
+  content: attr(data-n); display: block; margin: 10px 0 16px;
+  font-family: var(--font-display); font-style: italic; font-size: 15px; letter-spacing: .1em; color: var(--gold);
+}
+html[data-layout="journal"] .msg .qt { font-size: 31px; line-height: 1.12; font-weight: 500; color: var(--ink); margin-bottom: 16px; text-wrap: balance; }
+html[data-layout="journal"] .msg.scene { color: var(--ink-2); font-size: 16.5px; line-height: 1.6; }
+html[data-layout="journal"] .msg.q { font-style: italic; font-size: 21px; color: var(--ink); margin-top: 8px; padding-top: 18px; border-top: 1px solid var(--line); }
+html[data-layout="journal"] .answers { gap: 0; padding-top: 22px; }
+html[data-layout="journal"] .opt { border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 18px 4px; min-height: 0; background: none; }
+html[data-layout="journal"] .opt:last-child { border-bottom: 1px solid var(--line); }
+html[data-layout="journal"] .opt .lt { border: 0; width: auto; min-width: 18px; height: auto; display: block; margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.2; }
+@media (hover: hover) { html[data-layout="journal"] .opt:hover { background: none; color: var(--gold); } }
+html[data-layout="journal"] .opt.on { background: var(--gold-soft); transform: none; }
+html[data-layout="journal"] .answers .btn { margin-top: 6px; }
+html[data-layout="journal"] .btn { border-radius: 2px; text-transform: uppercase; letter-spacing: .16em; font-size: 13.5px; min-height: 56px; }
+html[data-layout="journal"] .btn.ghost { border-color: var(--gold); color: var(--gold); }
+html[data-palette="light"][data-layout="journal"] .btn.ghost { border-color: var(--ink); color: var(--ink); }
+html[data-layout="journal"] .link { text-transform: uppercase; letter-spacing: .14em; font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line); padding: 4px 0; align-self: center; }
+
+/* обложка теста */
+html[data-layout="journal"] .cover { display: grid; justify-items: center; text-align: center; gap: 10px; padding: 26px 0 30px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+html[data-layout="journal"] .cover .crown { width: 96px; }
+html[data-layout="journal"] .cover h1 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(32px, 9vw, 40px); line-height: 1.1; text-wrap: balance; }
+html[data-layout="journal"] .intro .who { margin-bottom: 10px; }
+html[data-layout="journal"] .intro .avatar { width: 52px; height: 52px; font-size: 17px; }
+html[data-layout="journal"] .intro .msg { font-size: 17px; line-height: 1.55; color: var(--ink); }
+html[data-layout="journal"] .intro .who + .msg { font-family: var(--font-display); font-style: italic; font-size: 22px; line-height: 1.3; }
+
+/* результат и финал */
+html[data-layout="journal"] .res h1 { font-weight: 500; font-size: clamp(34px, 9.5vw, 44px); }
+html[data-layout="journal"] .profile { border: 0; border-block: 1px solid var(--line); border-radius: 0; padding: 18px 0; }
+html[data-layout="journal"] .rtext .strategy { font-style: italic; padding-left: 16px; border-left: 2px solid var(--gold); }
+html[data-layout="journal"] .life li { border-left-color: var(--gold); }
+html[data-layout="journal"] .change { background: none; }
+html[data-palette="light"] .change { background: #fffaf0; }
+html[data-layout="journal"] .direct { background: none; }
+html[data-layout="journal"] .final h2 { font-weight: 500; }
+
+/* верхняя полоса во всю ширину, без «плашки» по краям */
+html[data-palette] .top {
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px));
+}
+html[data-palette] .top { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+html[data-palette] .top::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--bg); opacity: .86; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+
+/* кнопка смены темы */
+.theme { width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--ink-2); cursor: pointer; display: grid; place-items: center; }
+@media (hover: hover) { .theme:hover { color: var(--gold); } }
+
+/* первый экран: шапка поменьше, сообщения Юлии пузырями с «печатает…» */
+html[data-layout="journal"] .cover { gap: 8px; padding: 10px 0 22px; margin-bottom: 16px; }
+html[data-layout="journal"] .cover .crown { width: 72px; }
+html[data-layout="journal"] .cover h1 { font-size: clamp(25px, 7vw, 30px); }
+html[data-layout="journal"] .intro .who + .msg { font-family: var(--font-body); font-style: normal; font-size: 16px; line-height: 1.45; }
+html[data-layout="journal"] .intro .msg {
+  max-width: 88%; padding: 12px 16px; font-size: 16px; line-height: 1.45;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 20px 20px 20px 6px;
+}
+html[data-palette="dark"][data-layout="journal"] .intro .msg { background: linear-gradient(180deg, #25232a, #201e24); border-color: rgba(255, 255, 255, .05); }
+html[data-layout="journal"] .intro .typing { padding: 14px 16px; }
+html[data-palette="light"] .intro .msg { box-shadow: 0 1px 2px rgba(38, 34, 30, .04); }
+
+/* мелкие ссылки внизу последнего экрана: «Поделиться в сторис», «Пройти заново» */
+.links { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 24px; }
+html[data-layout="journal"] .links .link { align-self: auto; }
+
+/* фото Юлии в круглой рамке */
+.avatar:has(img) { background: none; border: 0; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--gold); }
+html[data-layout="journal"] .intro .avatar { width: 56px; height: 56px; }
+
+/* перенос строки в тексте (Enter в редакторе) */
+.msg, .note, .before p, .rtext p, .final .ftext { white-space: pre-line; }
