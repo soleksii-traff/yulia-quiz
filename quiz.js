@@ -386,10 +386,15 @@
     });
     g.fillStyle = "#b4ada3"; g.font = "400 48px 'Golos Text', sans-serif";
     g.fillText(S.question, 540, Math.max(y + 80, 1250));
+    /* подпись внизу: переносим по словам, чтобы не вылезала за рамку */
     g.fillStyle = "#f3eee6"; g.font = "600 44px 'Golos Text', sans-serif";
-    g.fillText(S.footer, 540, 1640);
+    var fw = S.footer.split(" "), fl = [], cur = "";
+    fw.forEach(function (w) { var t = cur ? cur + " " + w : w; if (g.measureText(t).width > 820 && cur) { fl.push(cur); cur = w; } else cur = t; });
+    fl.push(cur);
+    var fy = 1600 - (fl.length - 1) * 58;
+    fl.forEach(function (l, i) { g.fillText(l, 540, fy + i * 58); });
     g.fillStyle = "#c9a45c"; g.font = "400 40px 'Golos Text', sans-serif";
-    g.fillText(S.url, 540, 1710);
+    g.fillText(S.url, 540, 1680);
     var url = cv.toDataURL("image/png");
     try {
       var blob = await new Promise(function (res) { cv.toBlob(res, "image/png"); });
