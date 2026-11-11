@@ -204,7 +204,7 @@
     var body = frame({ progress: 0, bodyClass: "chat intro hero" });
     root.classList.add("has-hero");
     var hero = el("div", "hero-img");
-    var img = el("img"); img.src = C.author.photo || C.author.avatar; img.alt = C.author.name;
+    var img = el("img"); img.src = C.heroPhoto || C.author.photo || C.author.avatar; img.alt = C.author.name;
     hero.appendChild(img);
     var head = el("div", "hero-head");
     var cc = el("div", "crown"); cc.innerHTML = crownSvg;
