@@ -447,7 +447,7 @@
     window.scrollTo(0, 0);
   }
 
-  function restart() { state = { answers: [] }; drop(STORE); intro(); }
+  function restart() { state = { answers: [] }; drop(STORE); question(0); }
 
   /* Перерисовать текущий экран (нужно режиму редактирования в превью) */
   window.__quizRefresh = function () {
