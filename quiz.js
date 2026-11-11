@@ -11,7 +11,7 @@
   var LETTERS = ["А", "Б", "В", "Г"];
   /* Оформление: журнальная вёрстка, тёмная или светлая тема.
      Тема по умолчанию из config.js (theme), выбор человека запоминается в браузере. */
-  var THEME = "quiz_theme_v1";
+  var THEME = C.themeKey || "quiz_theme_v1"; // у версий свой ключ, чтобы выбор темы в одной не менял другую
   function setTheme(t) {
     t = t === "light" ? "light" : "dark";
     document.documentElement.setAttribute("data-layout", C.layout || "journal");
