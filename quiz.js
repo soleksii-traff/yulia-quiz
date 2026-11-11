@@ -115,6 +115,7 @@
 
   function frame(opts) {
     root.innerHTML = "";
+    root.classList.remove("has-hero");
     window.scrollTo(0, 0);
     if (C.draft) root.appendChild(el("p", "draft", "Черновик"));
     var top = el("div", "top");
@@ -178,7 +179,33 @@
   }
 
   /* ---------- экраны ---------- */
+  /* Вид первого экрана: "chat" — переписка, "photo" — большое фото. Для сравнения можно открыть ?intro=photo */
+  var introStyle = (function () { var m = location.search.match(/[?&]intro=(chat|photo)/); return m ? m[1] : (C.introStyle || "chat"); })();
+
+  function introPhoto() {
+    ++run;
+    var body = frame({ progress: 0, bodyClass: "chat intro hero" });
+    root.classList.add("has-hero");
+    var hero = el("div", "hero-img");
+    var img = el("img"); img.src = C.author.photo || C.author.avatar; img.alt = C.author.name;
+    hero.appendChild(img);
+    var head = el("div", "hero-head");
+    var cc = el("div", "crown"); cc.innerHTML = crownSvg;
+    head.append(cc, el("p", "eyebrow", C.labels.cover), el("h1", null, C.title));
+    var by = el("p", "byline");
+    by.append(el("b", null, C.author.name), document.createTextNode(" · " + C.author.role));
+    var text = el("div", "hero-text");
+    C.intro.forEach(function (t, i) { var p = el("p", null, t); p.style.animationDelay = (250 + i * 90) + "ms"; text.appendChild(p); });
+    var box = el("div", "answers");
+    var go = el("button", "btn", C.startButton);
+    go.onclick = function () { root.classList.remove("has-hero"); track("quiz_start"); question(0); };
+    box.appendChild(go);
+    if (C.introNote) box.appendChild(el("p", "note", C.introNote));
+    body.append(hero, head, by, text, box);
+  }
+
   async function intro() {
+    if (introStyle === "photo") return introPhoto();
     var id = ++run;
     var chat = frame({ progress: 0, bodyClass: "chat intro" });
     if (C.title) {

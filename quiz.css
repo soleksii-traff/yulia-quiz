@@ -363,3 +363,30 @@ html[data-layout="journal"] .intro .avatar { width: 56px; height: 56px; }
 
 /* перенос строки в тексте (Enter в редакторе) */
 .msg, .note, .before p, .rtext p, .final .ftext { white-space: pre-line; }
+
+/* ---------- первый экран с большим фото (introStyle: "photo") ---------- */
+.app.has-hero .top { position: absolute; left: 0; right: 0; margin: 0; z-index: 6; }
+.app.has-hero .top::before { display: none; }
+.app.has-hero .top .back, .app.has-hero .top .bar, .app.has-hero .top .count { visibility: hidden; }
+.app.has-hero { position: relative; }
+.app.has-hero .theme { color: #f3eee6; background: rgba(0, 0, 0, .28); }
+.chat.hero { padding-top: 0; gap: 0; }
+.hero-img {
+  position: relative;
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  height: min(64vh, 560px);
+  overflow: hidden;
+  animation: heroIn .9s ease both;
+}
+.hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; display: block; }
+.hero-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.22) 0%, transparent 22%, transparent 48%, var(--bg) 98%); }
+.hero-head { position: relative; margin-top: -120px; display: grid; justify-items: center; text-align: center; gap: 8px; animation: rise .6s .15s ease both; }
+.hero-head .crown { width: 64px; color: var(--gold); }
+.hero-head h1 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(30px, 8.6vw, 38px); line-height: 1.1; text-wrap: balance; }
+.byline { margin: 14px 0 0; text-align: center; font-size: 13px; color: var(--ink-2); animation: rise .6s .2s ease both; }
+.byline b { color: var(--ink); font-weight: 600; }
+.hero-text { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+.hero-text p { margin: 0 0 12px; font-size: 16.5px; line-height: 1.55; white-space: pre-line; animation: rise .5s ease both; }
+.hero-text p:first-child { font-family: var(--font-display); font-style: italic; font-size: 20px; line-height: 1.35; }
+.chat.hero .answers { padding-top: 10px; }
+@keyframes heroIn { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
