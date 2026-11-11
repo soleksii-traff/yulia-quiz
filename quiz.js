@@ -12,29 +12,38 @@
   /* Оформление: журнальная вёрстка, тёмная или светлая тема.
      Тема по умолчанию из config.js (theme), выбор человека запоминается в браузере. */
   var THEME = C.themeKey || "quiz_theme_v1"; // у версий свой ключ, чтобы выбор темы в одной не менял другую
-  function setTheme(t) {
-    t = t === "light" ? "light" : "dark";
-    document.documentElement.setAttribute("data-layout", C.layout || "journal");
-    document.documentElement.setAttribute("data-palette", t);
-    var mc = document.querySelector('meta[name="theme-color"]');
-    if (mc) mc.setAttribute("content", t === "light" ? "#f6f1e9" : "#19181b");
-    return t;
-  }
   /* Варианты оформления в стиле Юлии: powder, sky. Задаётся skin в config.js или ссылкой ?skin=powder.
-     С вариантом оформления кнопка смены темы скрыта. */
+     У «пудры» есть тёмная пара — бургунди, у остальных вариантов кнопка смены темы скрыта. */
   var SKINS = {
-    powder: { color: "#f5f1ee", fonts: "family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;600" },
-    sky: { color: "#7a9cb3", fonts: "family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;500" }
+    powder: { light: "#f5f1ee", dark: "#5a1d2d", fonts: "family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;600" },
+    sky: { light: "#7a9cb3", fonts: "family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;500" }
   };
   var skin = (function () { var q = new URLSearchParams(location.search).get("skin"); var k = q != null ? q : C.skin; return SKINS[k] ? k : ""; })();
+  function setTheme(t) {
+    t = t === "light" ? "light" : "dark";
+    var h = document.documentElement, color;
+    h.setAttribute("data-layout", C.layout || "journal");
+    if (skin) {
+      var S = SKINS[skin];
+      if (!S.dark) t = "light";
+      h.setAttribute("data-palette", skin);
+      h.setAttribute("data-skin", skin);
+      h.setAttribute("data-mode", t);
+      color = S[t];
+    } else {
+      h.setAttribute("data-palette", t);
+      color = t === "light" ? "#f6f1e9" : "#19181b";
+    }
+    var mc = document.querySelector('meta[name="theme-color"]');
+    if (mc) mc.setAttribute("content", color);
+    return t;
+  }
   var theme = setTheme(new URLSearchParams(location.search).get("theme") || load(THEME) || C.theme);
   if (skin) {
-    document.documentElement.setAttribute("data-palette", skin);
-    document.documentElement.setAttribute("data-skin", skin);
     var fl = document.createElement("link"); fl.rel = "stylesheet";
     fl.href = "https://fonts.googleapis.com/css2?" + SKINS[skin].fonts + "&display=swap";
     document.head.appendChild(fl);
-    var mc0 = document.querySelector('meta[name="theme-color"]'); if (mc0) mc0.setAttribute("content", SKINS[skin].color);
+    if (!SKINS[skin].dark) document.documentElement.setAttribute("data-no-toggle", "");
   }
   function toggleTheme() { theme = setTheme(theme === "dark" ? "light" : "dark"); save(THEME, theme); syncThemeBtn(); }
   function syncThemeBtn() {

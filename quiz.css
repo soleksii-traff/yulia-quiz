@@ -394,7 +394,7 @@ html[data-layout="journal"] .intro .avatar { width: 56px; height: 56px; }
 /* =====================================================================
    Варианты оформления в стиле материалов Юлии (skin в config.js или ?skin=)
    ===================================================================== */
-html[data-skin] .theme { visibility: hidden; }
+html[data-no-toggle] .theme { visibility: hidden; }
 html[data-skin="sky"] { font-variant-numeric: lining-nums; }
 html[data-skin] body { background: var(--bg); }
 html[data-skin] .btn.ghost { background: transparent; }
@@ -499,3 +499,25 @@ html[data-skin="sky"] .before p { color: var(--ink-2); }
 html[data-skin="sky"] .link { color: #fff; border-bottom-color: rgba(255, 255, 255, .5); }
 html[data-skin="sky"] .crown { color: #fff; }
 html[data-skin="sky"] .avatar:has(img) { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px #fff; }
+
+/* ---------- «Пудра», тёмная пара: насыщенный бургунди с пудровыми акцентами ---------- */
+html[data-skin="powder"][data-mode="dark"] {
+  --bg: #5a1d2d;
+  --surface: #6a2638;
+  --surface-2: #772c40;
+  --line: rgba(255, 228, 234, .16);
+  --ink: #fbeff2;
+  --ink-2: #e3c3cc;
+  --gold: #f0bfcc;           /* пудрово-розовый */
+  --gold-soft: rgba(240, 191, 204, .14);
+  --gold-ink: #4a1624;
+  color-scheme: dark;
+}
+html[data-skin="powder"][data-mode="dark"] body { background: radial-gradient(120% 60% at 50% -10%, #7a2a3e 0%, #5a1d2d 60%, #4f1927 100%) fixed, var(--bg); }
+html[data-skin="powder"][data-mode="dark"] .top::before { background: #521a29; }
+html[data-skin="powder"][data-mode="dark"] .opt { box-shadow: 0 1px 0 rgba(0, 0, 0, .12); }
+@media (hover: hover) { html[data-skin="powder"][data-mode="dark"] .opt:hover { background: var(--surface-2); color: var(--ink); box-shadow: none; } }
+html[data-skin="powder"][data-mode="dark"] .opt.on { background: #82334a; box-shadow: inset 0 0 0 1px var(--gold); }
+html[data-skin="powder"][data-mode="dark"] .btn:not(.ghost) { background: #f3c9d4; color: #4a1624; box-shadow: 0 6px 22px rgba(0, 0, 0, .22); }
+html[data-skin="powder"][data-mode="dark"] .hero-text, html[data-skin="powder"][data-mode="dark"] .life li, html[data-skin="powder"][data-mode="dark"] .change { box-shadow: none; }
+html[data-skin="powder"][data-mode="dark"] .msg.scene, html[data-skin="powder"][data-mode="dark"] .before p { color: var(--ink-2); }
