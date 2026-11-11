@@ -2,6 +2,8 @@
 (function () {
   "use strict";
   var C = window.QUIZ_CONFIG;
+  /* Версии для сравнения (папки v1, v2, v3…): поверх config.js подставляются их настройки */
+  if (window.QUIZ_VARIANT) Object.keys(window.QUIZ_VARIANT).forEach(function (k) { C[k] = window.QUIZ_VARIANT[k]; });
   var Q = C.questions;
   var STORE = "quiz_state_v2"; // v2: новые вопросы, старый прогресс не подхватываем
   var CONSENT = "quiz_consent_v1";
@@ -18,7 +20,22 @@
     if (mc) mc.setAttribute("content", t === "light" ? "#f6f1e9" : "#19181b");
     return t;
   }
+  /* Варианты оформления в стиле Юлии: powder, sky. Задаётся skin в config.js или ссылкой ?skin=powder.
+     С вариантом оформления кнопка смены темы скрыта. */
+  var SKINS = {
+    powder: { color: "#f5f1ee", fonts: "family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;600" },
+    sky: { color: "#7a9cb3", fonts: "family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;500" }
+  };
+  var skin = (function () { var q = new URLSearchParams(location.search).get("skin"); var k = q != null ? q : C.skin; return SKINS[k] ? k : ""; })();
   var theme = setTheme(new URLSearchParams(location.search).get("theme") || load(THEME) || C.theme);
+  if (skin) {
+    document.documentElement.setAttribute("data-palette", skin);
+    document.documentElement.setAttribute("data-skin", skin);
+    var fl = document.createElement("link"); fl.rel = "stylesheet";
+    fl.href = "https://fonts.googleapis.com/css2?" + SKINS[skin].fonts + "&display=swap";
+    document.head.appendChild(fl);
+    var mc0 = document.querySelector('meta[name="theme-color"]'); if (mc0) mc0.setAttribute("content", SKINS[skin].color);
+  }
   function toggleTheme() { theme = setTheme(theme === "dark" ? "light" : "dark"); save(THEME, theme); syncThemeBtn(); }
   function syncThemeBtn() {
     var b = document.querySelector(".theme");
@@ -246,6 +263,7 @@
     chat.appendChild(who());
     var sm = show(chat, q.scene, "scene", q.title);
     sm.setAttribute("data-n", (i < 9 ? "0" : "") + (i + 1) + " / " + Q.length);
+    sm.setAttribute("data-num", (i < 9 ? "0" : "") + (i + 1));
     if (q.ask) show(chat, q.ask, "q", null, 140);
     var box = el("div", "answers");
     box.setAttribute("role", "group");
