@@ -115,6 +115,7 @@
 
   function frame(opts) {
     root.innerHTML = "";
+    window.scrollTo(0, 0);
     if (C.draft) root.appendChild(el("p", "draft", "Черновик"));
     var top = el("div", "top");
     var back = el("button", "back");
@@ -166,6 +167,16 @@
     return m;
   }
 
+  /* Сообщение без «печатает…»: просто плавно появляется (вопросы). delay — задержка анимации, мс */
+  function show(chat, text, cls, title, delay) {
+    var m = el("div", "msg" + (cls ? " " + cls : ""));
+    if (title) m.appendChild(el("b", "qt", title));
+    m.appendChild(document.createTextNode(text));
+    if (delay) m.style.animationDelay = delay + "ms";
+    chat.appendChild(m);
+    return m;
+  }
+
   /* ---------- экраны ---------- */
   async function intro() {
     var id = ++run;
@@ -194,19 +205,21 @@
     go.focus({ preventScroll: true });
   }
 
-  async function question(i) {
+  /* dir: "back" — пришли кнопкой «Назад», экран въезжает слева */
+  function question(i, dir) {
     var id = ++run;
     var q = Q[i];
     var chat = frame({
       progress: (i / Q.length) * 100,
       count: (i + 1) + " из " + Q.length,
-      onBack: function () { if (i === 0) { state.answers = []; persist(); intro(); } else { state.answers = state.answers.slice(0, i - 1); persist(); question(i - 1); } }
+      onBack: function () { if (i === 0) { state.answers = []; persist(); intro(); } else { state.answers = state.answers.slice(0, i - 1); persist(); question(i - 1, "back"); } }
     });
+    chat.classList.add("step");
+    if (dir === "back") chat.classList.add("from-left");
     chat.appendChild(who());
-    var sm = await say(chat, q.scene, "scene", id, q.title);
-    if (!sm) return;
+    var sm = show(chat, q.scene, "scene", q.title);
     sm.setAttribute("data-n", (i < 9 ? "0" : "") + (i + 1) + " / " + Q.length);
-    if (q.ask && !(await say(chat, q.ask, "q", id))) return;
+    if (q.ask) show(chat, q.ask, "q", null, 140);
     var box = el("div", "answers");
     box.setAttribute("role", "group");
     box.setAttribute("aria-label", q.ask || q.title);
@@ -214,7 +227,7 @@
       var b = el("button", "opt");
       if (C.showLetters) b.appendChild(el("span", "lt", LETTERS[k]));
       b.appendChild(el("span", null, o.text));
-      b.style.animationDelay = (k * 60) + "ms";
+      b.style.animationDelay = (260 + k * 70) + "ms";
       b.onclick = function () { pick(i, k, b, box, chat, id); };
       box.appendChild(b);
     });
@@ -233,7 +246,7 @@
     if (id !== run) return;
     box.remove();
     chat.appendChild(el("div", "msg me", (C.showLetters ? LETTERS[k] + ") " : "") + Q[i].options[k].text));
-    await wait(650);
+    await wait(450);
     if (id !== run) return;
     var n = i + 1;
     if (C.remarks && C.remarks[n] && n < Q.length) return remark(n);
@@ -244,8 +257,9 @@
   async function remark(n) {
     var id = ++run;
     var chat = frame({ progress: (n / Q.length) * 100, count: n + " из " + Q.length });
+    chat.classList.add("step");
     chat.appendChild(who());
-    if (!(await say(chat, C.remarks[n], null, id))) return;
+    show(chat, C.remarks[n]);
     var go = el("button", "link", "Дальше");
     var box = el("div", "answers"); box.appendChild(go); chat.appendChild(box);
     var done = false;
