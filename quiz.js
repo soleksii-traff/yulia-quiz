@@ -145,15 +145,24 @@
     w.append(av, t);
     return w;
   }
-  async function say(chat, text, cls, id, title) {
+  /* Держим новое сообщение в поле зрения, если человек и так внизу страницы */
+  function nearBottom() { return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 160; }
+  function follow(node) { node.scrollIntoView({ block: "end", behavior: reduced ? "auto" : "smooth" }); }
+
+  /* Сообщение Юлии: сначала «печатает…», потом текст. typing — скорость из config (для первого экрана). */
+  async function say(chat, text, cls, id, title, typing) {
+    var stick = typing && nearBottom();
     var t = el("div", "msg typing"); t.innerHTML = "<i></i><i></i><i></i>"; t.setAttribute("aria-hidden", "true");
     chat.appendChild(t);
-    await wait(Math.min(1100, 350 + text.length * 9));
+    if (stick) follow(t);
+    var ms = typing ? Math.min(typing.max, typing.min + text.length * typing.perChar) : Math.min(1100, 350 + text.length * 9);
+    await wait(ms);
     if (id !== run) return null;
     var m = el("div", "msg" + (cls ? " " + cls : ""));
     if (title) m.appendChild(el("b", "qt", title));
     m.appendChild(document.createTextNode(text));
     t.replaceWith(m);
+    if (stick) follow(m);
     return m;
   }
 
@@ -168,17 +177,20 @@
       chat.appendChild(cover);
     }
     chat.appendChild(who());
+    var T = C.introTyping || { min: 1000, perChar: 14, max: 2800, pause: 700 };
     for (var i = 0; i < C.intro.length; i++) {
-      if (!(await say(chat, C.intro[i], null, id))) return;
-      await wait(250);
+      if (!(await say(chat, C.intro[i], null, id, null, T))) return;
+      await wait(T.pause);
     }
     if (id !== run) return;
+    var stick = nearBottom();
     var box = el("div", "answers");
     var go = el("button", "btn", C.startButton);
     go.onclick = function () { track("quiz_start"); question(0); };
     box.appendChild(go);
     if (C.introNote) box.appendChild(el("p", "note", C.introNote));
     chat.appendChild(box);
+    if (stick) follow(box);
     go.focus({ preventScroll: true });
   }
 
