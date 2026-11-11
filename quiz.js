@@ -227,7 +227,7 @@
       var b = el("button", "opt");
       if (C.showLetters) b.appendChild(el("span", "lt", LETTERS[k]));
       b.appendChild(el("span", null, o.text));
-      b.style.animationDelay = (260 + k * 70) + "ms";
+      b.style.animationDelay = (120 + k * 50) + "ms";
       b.onclick = function () { pick(i, k, b, box, chat, id); };
       box.appendChild(b);
     });
@@ -242,11 +242,11 @@
     state.answers[i] = k;
     persist();
     track("quiz_step", { step: i + 1 });
-    await wait(260);
+    /* выбранный ответ подсвечивается, экран уходит влево, следующий въезжает справа */
+    await wait(170);
     if (id !== run) return;
-    box.remove();
-    chat.appendChild(el("div", "msg me", (C.showLetters ? LETTERS[k] + ") " : "") + Q[i].options[k].text));
-    await wait(450);
+    chat.classList.add("leave");
+    await wait(170);
     if (id !== run) return;
     var n = i + 1;
     if (C.remarks && C.remarks[n] && n < Q.length) return remark(n);

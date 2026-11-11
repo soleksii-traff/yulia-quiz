@@ -215,7 +215,8 @@ button { font: inherit; color: inherit; }
 .consent .btn.ghost { color: var(--ink); }
 
 /* переход между вопросами: экран мягко въезжает сбоку */
-.chat.step { animation: step .42s cubic-bezier(.2, .7, .2, 1) both; }
+.chat.step { animation: step .3s cubic-bezier(.2, .7, .2, 1) both; }
+.chat.leave { opacity: 0; transform: translateX(-20px); transition: opacity .17s ease, transform .17s ease; }
 .chat.step.from-left { animation-name: step-back; }
 @keyframes step { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
 @keyframes step-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
@@ -332,7 +333,7 @@ html[data-palette] .top {
   padding-inline: max(16px, env(safe-area-inset-left, 0px));
 }
 html[data-palette] .top { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
-html[data-palette] .top::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--bg); opacity: .86; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+html[data-palette] .top::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--bg); opacity: .86; }
 
 /* кнопка смены темы */
 .theme { width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--ink-2); cursor: pointer; display: grid; place-items: center; }
