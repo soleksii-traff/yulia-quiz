@@ -15,7 +15,7 @@
   /* Варианты оформления в стиле Юлии: powder, sky. Задаётся skin в config.js или ссылкой ?skin=powder.
      У «пудры» есть тёмная пара — бургунди, у остальных вариантов кнопка смены темы скрыта. */
   var SKINS = {
-    powder: { light: "#f5f1ee", dark: "#5a1d2d", fonts: "family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;600" },
+    powder: { light: "#f5f1ee", dark: "#400f1c", fonts: "family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;600" },
     sky: { light: "#7a9cb3", fonts: "family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;500" }
   };
   var skin = (function () { var q = new URLSearchParams(location.search).get("skin"); var k = q != null ? q : C.skin; return SKINS[k] ? k : ""; })();

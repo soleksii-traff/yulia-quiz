@@ -500,11 +500,11 @@ html[data-skin="sky"] .link { color: #fff; border-bottom-color: rgba(255, 255, 2
 html[data-skin="sky"] .crown { color: #fff; }
 html[data-skin="sky"] .avatar:has(img) { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px #fff; }
 
-/* ---------- «Пудра», тёмная пара: насыщенный бургунди с пудровыми акцентами ---------- */
+/* ---------- «Пудра», тёмная пара: бордовый с пудровыми акцентами ---------- */
 html[data-skin="powder"][data-mode="dark"] {
-  --bg: #5a1d2d;
-  --surface: #6a2638;
-  --surface-2: #772c40;
+  --bg: #400f1c;
+  --surface: #521827;
+  --surface-2: #5f1f31;
   --line: rgba(255, 228, 234, .16);
   --ink: #fbeff2;
   --ink-2: #e3c3cc;
@@ -513,11 +513,11 @@ html[data-skin="powder"][data-mode="dark"] {
   --gold-ink: #4a1624;
   color-scheme: dark;
 }
-html[data-skin="powder"][data-mode="dark"] body { background: radial-gradient(120% 60% at 50% -10%, #7a2a3e 0%, #5a1d2d 60%, #4f1927 100%) fixed, var(--bg); }
-html[data-skin="powder"][data-mode="dark"] .top::before { background: #521a29; }
+html[data-skin="powder"][data-mode="dark"] body { background: radial-gradient(120% 60% at 50% -10%, #5a1828 0%, #400f1c 60%, #370c18 100%) fixed, var(--bg); }
+html[data-skin="powder"][data-mode="dark"] .top::before { background: #3a0d19; }
 html[data-skin="powder"][data-mode="dark"] .opt { box-shadow: 0 1px 0 rgba(0, 0, 0, .12); }
 @media (hover: hover) { html[data-skin="powder"][data-mode="dark"] .opt:hover { background: var(--surface-2); color: var(--ink); box-shadow: none; } }
-html[data-skin="powder"][data-mode="dark"] .opt.on { background: #82334a; box-shadow: inset 0 0 0 1px var(--gold); }
+html[data-skin="powder"][data-mode="dark"] .opt.on { background: #6b2338; box-shadow: inset 0 0 0 1px var(--gold); }
 html[data-skin="powder"][data-mode="dark"] .btn:not(.ghost) { background: #f3c9d4; color: #4a1624; box-shadow: 0 6px 22px rgba(0, 0, 0, .22); }
 html[data-skin="powder"][data-mode="dark"] .hero-text, html[data-skin="powder"][data-mode="dark"] .life li, html[data-skin="powder"][data-mode="dark"] .change { box-shadow: none; }
 html[data-skin="powder"][data-mode="dark"] .msg.scene, html[data-skin="powder"][data-mode="dark"] .before p { color: var(--ink-2); }
