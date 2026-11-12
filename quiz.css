@@ -735,3 +735,6 @@ html[data-skin] .app .hero-head + .hero-text { margin-top: 36px; }
 html[data-skin="emerald"][data-mode="dark"] { --ink: #ffffff; --ink-2: #ffffff; }
 html[data-skin="emerald"][data-mode="dark"] :is(.eyebrow, .msg[data-n]::before, .res h1 em, .vblock h2, .link, .count, .note, .prow, .prow:not(.lead), .before p, .msg.scene, .hero-text p, .byline, .ico.drawn) { color: #ffffff; }
 html[data-skin="emerald"][data-mode="dark"] .msg[data-n]::before { color: #ffffff; }
+/* тёмная: буквы ответов — зелёные в белых кружках (alejo 12.11) */
+html[data-skin="emerald"][data-mode="dark"] .opt .lt { background: #ffffff; color: #0f4f4e; }
+html[data-skin="emerald"][data-mode="dark"] .opt::after { border-color: #ffffff; }
