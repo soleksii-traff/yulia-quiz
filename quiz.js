@@ -18,8 +18,8 @@
     powder: { light: "#f5f1ee", dark: "#400f1c", fonts: "family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;600" },
     sky: { light: "#7a9cb3", fonts: "family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;500" },
     /* «Изумруд» по словам Юлии: цвет стен её дома, голубое свечение сзади, белый вместо бежевого.
-       Onest 700–800 вместо «Poster» из сторис (жирный гротеск), Onest 300 вместо «Deco» (тонкий гротеск). */
-    emerald: { light: "#ffffff", dark: "#0f4f4e", fonts: "family=Onest:wght@300;400;500;600;700;800" }
+       Шрифты как «Poster» и «Deco» из её сторис (выбор alejo 12.11): Yeseva One — заголовки, Poiret One — текст. */
+    emerald: { light: "#ffffff", dark: "#0f4f4e", fonts: "family=Yeseva+One&family=Poiret+One" }
   };
   var skin = (function () { var q = new URLSearchParams(location.search).get("skin"); var k = q != null ? q : C.skin; return SKINS[k] ? k : ""; })();
   function setTheme(t) {
