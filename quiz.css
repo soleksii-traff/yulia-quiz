@@ -633,7 +633,9 @@ html[data-skin="emerald"] .btn.ghost { border-color: var(--gold); color: var(--g
 html[data-skin="emerald"] .link { text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--ink-2); }
 
 /* картинка к вопросу: во всю ширину, 150 px */
-.qimg { position: relative; height: 150px; border-radius: 18px; overflow: hidden; margin: 2px 0 10px; animation: rise .35s ease both; }
+.qimg { position: relative; height: 150px; max-width: 100%; border-radius: 18px; overflow: hidden; margin: 2px 0 10px; animation: rise .35s ease both; }
+/* фото целиком, без обрезки: кадр 16:9 */
+.qimg.photo { height: auto; aspect-ratio: 16 / 9; max-width: none; margin-inline: -8px; }
 .qimg.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .qimg.photo::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
 .qimg.draw { display: grid; place-items: center; color: #13595b; background: radial-gradient(70% 95% at 28% 12%, #dff1fb 0%, #eaf6f5 48%, #ddeeed 100%); }
@@ -672,8 +674,8 @@ html[data-skin="emerald"] .change p { font-size: 16.5px; }
 
 /* видео сразу под результатом */
 .vblock { display: grid; gap: 14px; margin-top: 10px; padding-top: 22px; border-top: 1px solid var(--line); }
-.vcover { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: 20px; overflow: hidden; background: #0f4f4e; }
-.vcover img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; transition: transform .4s ease; }
+.vcover { position: relative; display: block; max-width: none; margin-inline: -8px; aspect-ratio: 4 / 3; border-radius: 20px; overflow: hidden; background: #0f4f4e; }
+.vcover img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; display: block; transition: transform .4s ease; }
 .vcover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 40, 40, 0) 40%, rgba(10, 40, 40, .45) 100%); }
 .vcover .play {
   position: absolute; left: 50%; top: 50%; z-index: 1; width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 50%;
