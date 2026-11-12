@@ -16,7 +16,10 @@
      У «пудры» есть тёмная пара — бургунди, у остальных вариантов кнопка смены темы скрыта. */
   var SKINS = {
     powder: { light: "#f5f1ee", dark: "#400f1c", fonts: "family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;600" },
-    sky: { light: "#7a9cb3", fonts: "family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;500" }
+    sky: { light: "#7a9cb3", fonts: "family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;500" },
+    /* «Изумруд» по словам Юлии: цвет стен её дома, голубое свечение сзади, белый вместо бежевого.
+       Onest 700–800 вместо «Poster» из сторис (жирный гротеск), Onest 300 вместо «Deco» (тонкий гротеск). */
+    emerald: { light: "#ffffff", dark: "#0f4f4e", fonts: "family=Onest:wght@300;400;500;600;700;800" }
   };
   var skin = (function () { var q = new URLSearchParams(location.search).get("skin"); var k = q != null ? q : C.skin; return SKINS[k] ? k : ""; })();
   function setTheme(t) {
@@ -38,7 +41,9 @@
     if (mc) mc.setAttribute("content", color);
     return t;
   }
-  var theme = setTheme(new URLSearchParams(location.search).get("theme") || load(THEME) || C.theme);
+  /* themeLock: у версии одна тема, кнопка смены темы скрыта */
+  var theme = setTheme(C.themeLock ? C.theme : (new URLSearchParams(location.search).get("theme") || load(THEME) || C.theme));
+  if (C.themeLock) document.documentElement.setAttribute("data-no-toggle", "");
   if (skin) {
     var fl = document.createElement("link"); fl.rel = "stylesheet";
     fl.href = "https://fonts.googleapis.com/css2?" + SKINS[skin].fonts + "&display=swap";
@@ -225,6 +230,7 @@
     var box = el("div", "answers");
     var go = el("button", "btn", C.startButton);
     go.onclick = function () { root.classList.remove("has-hero"); track("quiz_start"); question(0); };
+    preload(0);
     box.appendChild(go);
     if (C.introNote) box.appendChild(el("p", "note", C.introNote));
     body.append(hero, head, by, text, box);
@@ -258,6 +264,35 @@
     go.focus({ preventScroll: true });
   }
 
+  /* Картинка к вопросу во всю ширину (illus в config: "draw" — рисунок, "photo" — фото) */
+  var illus = (function () { var m = location.search.match(/[?&]illus=(draw|photo|none)/); var k = m ? m[1] : C.illus; return k === "draw" || k === "photo" ? k : ""; })();
+  if (illus) document.documentElement.setAttribute("data-illus", illus);
+  if (illus === "draw" && window.QUIZ_ILLUS) {
+    /* общие заготовки рисунков: голубое свечение и «дрожание» линии от руки */
+    var defs = document.createElement("div");
+    defs.innerHTML = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' +
+      '<radialGradient id="glowGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#bdf1f1" stop-opacity=".75"/><stop offset="55%" stop-color="#8fdde0" stop-opacity=".28"/><stop offset="100%" stop-color="#8fdde0" stop-opacity="0"/></radialGradient>' +
+      '<filter id="hand" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="1.8"/></filter>' +
+      '</defs></svg>';
+    document.body.appendChild(defs.firstChild);
+  }
+  function qImage(i) {
+    if (!illus) return null;
+    var f = el("div", "qimg " + illus);
+    f.setAttribute("aria-hidden", "true");
+    if (illus === "photo") {
+      var img = el("img"); img.src = "img/q" + (i < 9 ? "0" : "") + (i + 1) + ".jpg"; img.alt = ""; img.decoding = "async";
+      f.appendChild(img);
+    } else {
+      var a = window.QUIZ_ILLUS && window.QUIZ_ILLUS[i];
+      if (!a) return null;
+      f.innerHTML = '<svg viewBox="0 0 120 90"><g filter="url(#hand)">' + a.svg + '</g></svg>';
+    }
+    return f;
+  }
+  /* предзагрузка следующей фотографии, чтобы переход был без пустой рамки */
+  function preload(i) { if (illus === "photo" && i < Q.length) { var im = new Image(); im.src = "img/q" + (i < 9 ? "0" : "") + (i + 1) + ".jpg"; } }
+
   /* dir: "back" — пришли кнопкой «Назад», экран въезжает слева */
   function question(i, dir) {
     var id = ++run;
@@ -270,6 +305,8 @@
     chat.classList.add("step");
     if (dir === "back") chat.classList.add("from-left");
     chat.appendChild(who());
+    var pic = qImage(i);
+    if (pic) chat.appendChild(pic);
     var sm = show(chat, q.scene, "scene", q.title);
     sm.setAttribute("data-n", (i < 9 ? "0" : "") + (i + 1) + " / " + Q.length);
     sm.setAttribute("data-num", (i < 9 ? "0" : "") + (i + 1));
@@ -286,6 +323,7 @@
       box.appendChild(b);
     });
     chat.appendChild(box);
+    preload(i + 1);
   }
 
   async function pick(i, k, btn, box, chat, id) {
@@ -392,26 +430,95 @@
       requestAnimationFrame(function () { setTimeout(function () { bars.forEach(function (b) { b[0].style.width = (b[1] / Q.length * 100) + "%"; }); }, 60); });
     }
 
-    var t = el("div", "rtext");
+    var I = C.resultIcons;
+    function h3(text, ico) { var h = el("h3"); if (I) h.appendChild(icon(ico)); h.appendChild(el("span", null, text)); return h; }
+    var t = el("div", "rtext" + (I ? " with-icons" : ""));
     t.appendChild(el("p", "strategy", M.strategy));
     M.intro.forEach(function (x) { t.appendChild(el("p", null, x)); });
-    t.appendChild(el("h3", null, C.labels.origin));
+    t.appendChild(h3(C.labels.origin, "sprout"));
     t.appendChild(el("p", null, M.origin));
-    t.appendChild(el("h3", null, C.labels.life));
+    t.appendChild(h3(C.labels.life, "spark"));
     var ul = el("ul", "life");
-    M.life.forEach(function (x) { var li = el("li"); li.append(el("b", null, x[0]), document.createTextNode(" " + x[1])); ul.appendChild(li); });
+    M.life.forEach(function (x) {
+      var li = el("li");
+      if (I) { li.appendChild(icon(lifeIcon(x[0]))); var d = el("div"); d.append(el("b", null, x[0]), document.createTextNode(" " + x[1])); li.appendChild(d); }
+      else li.append(el("b", null, x[0]), document.createTextNode(" " + x[1]));
+      ul.appendChild(li);
+    });
     t.appendChild(ul);
-    t.appendChild(el("h3", null, C.labels.hurts));
+    t.appendChild(h3(C.labels.hurts, "wall"));
     t.appendChild(el("p", null, M.hurts));
-    var ch = el("div", "change"); ch.append(el("small", null, C.labels.change), el("p", null, M.change));
+    var ch = el("div", "change");
+    var sm = el("small"); if (I) sm.appendChild(icon("key")); sm.appendChild(el("span", null, C.labels.change));
+    ch.append(sm, el("p", null, M.change));
     t.appendChild(ch);
     body.appendChild(t);
 
     var last = idx === n - 1;
+    if (last && C.resultVideo) { videoBlock(body, r); window.scrollTo(0, 0); return; }
     var go = el("button", "btn", last ? C.buttons.toFinal : C.buttons.nextResult);
     go.onclick = function () { if (last) final(); else result(idx + 1); };
     body.appendChild(go);
     window.scrollTo(0, 0);
+  }
+
+  /* Значки на экране результата: тонкая линия, цвет берут из темы */
+  var ICONS = {
+    sprout: '<path d="M12 21v-8"/><path d="M12 13c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 15c0-3-2.5-5.5-7-5.5 0 3.5 2.5 5.5 7 5.5z"/>',
+    spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="M12 8.5l1.2 2.3 2.3 1.2-2.3 1.2L12 15.5l-1.2-2.3L8.5 12l2.3-1.2z"/>',
+    wall: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 12h18M9 5v7M15 12v7"/>',
+    key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2 2M14 9l2 2"/>',
+    coin: '<circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.2c-.5-.8-1.4-1.2-2.5-1.2-1.6 0-2.7.8-2.7 2s1.1 1.7 2.7 2c1.6.3 2.7.9 2.7 2.1S13.6 16 12 16c-1.2 0-2.2-.5-2.7-1.3M12 6.5V8M12 16v1.5"/>',
+    heart: '<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>',
+    sun: '<circle cx="12" cy="12" r="3.8"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>',
+    cup: '<path d="M5 10h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M9 3.5c-.8 1 .8 2 0 3M12.5 3.5c-.8 1 .8 2 0 3"/>',
+    compass: '<circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+    star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
+    play: '<path d="M9 6.5v11l9-5.5z" fill="currentColor" stroke="none"/>'
+  };
+  function icon(k) {
+    var s = el("span", "ico");
+    s.setAttribute("aria-hidden", "true");
+    s.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[k] || ICONS.spark) + '</svg>';
+    return s;
+  }
+  function lifeIcon(t) {
+    t = t.toLowerCase();
+    if (t.indexOf("деньг") > -1) return "coin";
+    if (t.indexOf("отношен") > -1) return "heart";
+    if (t.indexOf("отдых") > -1) return "cup";
+    if (t.indexOf("решени") > -1) return "compass";
+    if (t.indexOf("самореализ") > -1) return "star";
+    return "sun";
+  }
+
+  /* Сразу под результатом: обложка видео, текст про лекцию и кнопка (вместо кнопки «Дальше») */
+  function videoBlock(body, r) {
+    var F = C.final;
+    var href = withParams(C.landingUrl, { via: "test" });
+    var v = el("div", "vblock");
+    var cover = el("a", "vcover");
+    cover.href = href; cover.target = "_top";
+    cover.setAttribute("aria-label", F.cta);
+    var img = el("img"); img.src = C.videoCover || C.heroPhoto || C.author.photo; img.alt = ""; img.loading = "lazy";
+    var play = el("span", "play"); play.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.play + '</svg>';
+    cover.append(img, play);
+    cover.onclick = function () { track("cta_click", { cta: "lecture_cover" }); };
+    var cta = el("a", "btn", F.cta);
+    cta.href = href; cta.target = "_top";
+    cta.onclick = function () { track("cta_click", { cta: "lecture" }); };
+    v.append(cover, el("p", "ftext", F.text), el("h2", null, F.title), cta);
+    body.appendChild(v);
+    var links = el("div", "links");
+    if (C.share && C.share.enabled) {
+      var sh = el("button", "link", C.buttons.share);
+      sh.onclick = function () { shareCard(r.leaders); };
+      links.appendChild(sh);
+    }
+    var again = el("button", "link", C.buttons.restart || "Пройти заново");
+    again.onclick = restart;
+    links.appendChild(again);
+    body.appendChild(links);
   }
 
   /* Картинка 1080×1920 для сторис. Делится через меню телефона, иначе показываем картинку для сохранения. */

@@ -521,3 +521,169 @@ html[data-skin="powder"][data-mode="dark"] .opt.on { background: #6b2338; box-sh
 html[data-skin="powder"][data-mode="dark"] .btn:not(.ghost) { background: #f3c9d4; color: #4a1624; box-shadow: 0 6px 22px rgba(0, 0, 0, .22); }
 html[data-skin="powder"][data-mode="dark"] .hero-text, html[data-skin="powder"][data-mode="dark"] .life li, html[data-skin="powder"][data-mode="dark"] .change { box-shadow: none; }
 html[data-skin="powder"][data-mode="dark"] .msg.scene, html[data-skin="powder"][data-mode="dark"] .before p { color: var(--ink-2); }
+
+/* =====================================================================
+   «Изумруд» (правки 12.11): цвета стен Юлии, голубое свечение сзади,
+   белый вместо бежевого, Onest как «Poster» (заголовки) и «Deco» (текст),
+   кнопки-пилюли, скругления 14–20 px, межстрочный меньше.
+   ===================================================================== */
+html[data-skin="emerald"] {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #eef6f6;
+  --line: #d5e5e4;
+  --ink: #0f2e2d;
+  --ink-2: #48615f;
+  --gold: #13595b;            /* главный цвет — стена Юлии */
+  --gold-soft: rgba(19, 89, 91, .07);
+  --gold-ink: #ffffff;
+  --deco: #c19a4b;            /* тёплое золото: корона и мелкие детали, как её украшения */
+  --glow: rgba(120, 190, 255, .34);
+  --font-display: "Onest", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-body: "Onest", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --r: 18px;
+  color-scheme: light;
+}
+html[data-skin="emerald"][data-mode="dark"] {
+  --bg: #0f4f4e;
+  --surface: rgba(255, 255, 255, .07);
+  --surface-2: rgba(255, 255, 255, .12);
+  --line: rgba(255, 255, 255, .17);
+  --ink: #f3fbfa;
+  --ink-2: #bfdcda;
+  --gold: #a6e5df;
+  --gold-soft: rgba(166, 229, 223, .13);
+  --gold-ink: #0f4f4e;
+  --deco: #e4c47e;
+  --glow: rgba(140, 200, 255, .38);
+  color-scheme: dark;
+}
+/* голубое свечение сзади, как на её фото */
+html[data-skin="emerald"] body {
+  font-weight: 300; font-size: 16.5px; line-height: 1.4;
+  background:
+    radial-gradient(85% 42% at 50% -6%, var(--glow), transparent 70%),
+    radial-gradient(55% 35% at 100% 18%, rgba(113, 204, 199, .16), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+html[data-skin="emerald"][data-mode="dark"] body {
+  background:
+    radial-gradient(80% 45% at 50% -6%, var(--glow), transparent 68%),
+    radial-gradient(60% 50% at 0% 35%, rgba(113, 204, 199, .2), transparent 70%),
+    radial-gradient(70% 50% at 100% 100%, rgba(8, 40, 40, .55), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+html[data-skin="emerald"] .top::before { display: none; }
+html[data-skin="emerald"] .bar { height: 3px; border-radius: 3px; background: var(--line); }
+html[data-skin="emerald"] .bar > i { background: var(--gold); border-radius: 3px; }
+html[data-skin="emerald"] .crown { color: var(--deco); }
+html[data-skin="emerald"] .eyebrow { color: var(--gold); font-weight: 600; letter-spacing: .2em; }
+
+/* первый экран */
+html[data-skin="emerald"] .hero-head h1 { font-weight: 800; font-size: clamp(30px, 8.4vw, 38px); line-height: 1.08; letter-spacing: -.01em; }
+html[data-skin="emerald"] .byline b { font-weight: 600; }
+html[data-skin="emerald"] .hero-text { border-top: 0; margin-top: 18px; padding-top: 0; }
+html[data-skin="emerald"] .hero-text p { font-size: 16.5px; line-height: 1.42; margin-bottom: 10px; }
+html[data-skin="emerald"] .hero-text p:first-child { font-family: var(--font-body); font-style: normal; font-weight: 600; font-size: 19px; line-height: 1.3; color: var(--ink); }
+html[data-skin="emerald"] .app.has-hero .theme { color: #fff; }
+
+/* вопрос: номер, жирный заголовок, текст тонким */
+html[data-skin="emerald"] .msg[data-n]::before {
+  content: "ВОПРОС  " attr(data-n); font-family: var(--font-body); font-style: normal; font-weight: 600;
+  font-size: 12.5px; letter-spacing: .2em; color: var(--gold); margin: 4px 0 10px;
+}
+html[data-skin="emerald"] .msg .qt { font-family: var(--font-display); font-weight: 800; font-size: 27px; line-height: 1.1; letter-spacing: -.01em; margin-bottom: 10px; }
+html[data-skin="emerald"] .msg.scene { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; font-weight: 300; }
+html[data-skin="emerald"] .msg.q { font-family: var(--font-body); font-style: normal; font-weight: 600; font-size: 18.5px; line-height: 1.3; border-top: 0; padding-top: 6px; margin-top: 4px; }
+
+/* ответы: карточки с буквой в круге и стрелкой — сразу видно, что нажимается */
+html[data-skin="emerald"] .answers { gap: 10px; padding-top: 16px; }
+html[data-skin="emerald"] .opt {
+  position: relative; align-items: center; gap: 12px;
+  padding: 13px 40px 13px 13px; min-height: 58px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+  font-weight: 400; line-height: 1.32; color: var(--ink);
+  box-shadow: 0 1px 2px rgba(15, 46, 45, .05), 0 4px 14px rgba(15, 46, 45, .04);
+}
+html[data-skin="emerald"] .opt:last-child { border-bottom: 1px solid var(--line); }
+html[data-skin="emerald"] .opt::after {
+  content: ""; position: absolute; right: 17px; top: 50%; width: 8px; height: 8px;
+  border-top: 2px solid var(--gold); border-right: 2px solid var(--gold);
+  transform: translateY(-50%) rotate(45deg); opacity: .55; transition: right .15s, opacity .15s;
+}
+html[data-skin="emerald"] .opt .lt {
+  width: 30px; height: 30px; min-width: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--gold); color: var(--gold-ink); border: 0; margin: 0;
+  font-family: var(--font-body); font-style: normal; font-weight: 700; font-size: 14px; line-height: 1;
+}
+@media (hover: hover) {
+  html[data-skin="emerald"] .opt:hover { background: var(--surface-2); border-color: var(--gold); color: var(--ink); }
+  html[data-skin="emerald"] .opt:hover::after { right: 14px; opacity: 1; }
+}
+html[data-skin="emerald"] .opt.on { background: var(--gold-soft); border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
+html[data-skin="emerald"][data-mode="dark"] .opt { box-shadow: none; }
+
+/* кнопки-пилюли */
+html[data-skin="emerald"] .btn { border-radius: 999px; text-transform: none; letter-spacing: .01em; font-size: 16.5px; font-weight: 600; }
+html[data-skin="emerald"] .btn:not(.ghost) { background: var(--gold); color: var(--gold-ink); box-shadow: 0 8px 24px rgba(19, 89, 91, .24); }
+html[data-skin="emerald"][data-mode="dark"] .btn:not(.ghost) { background: #ffffff; color: #0f4f4e; box-shadow: 0 8px 26px rgba(0, 0, 0, .22); }
+html[data-skin="emerald"] .btn.ghost { border-color: var(--gold); color: var(--gold); }
+html[data-skin="emerald"] .link { text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--ink-2); }
+
+/* картинка к вопросу: во всю ширину, 150 px */
+.qimg { position: relative; height: 150px; border-radius: 18px; overflow: hidden; margin: 2px 0 10px; animation: rise .35s ease both; }
+.qimg.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.qimg.photo::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+.qimg.draw { display: grid; place-items: center; color: #13595b; background: radial-gradient(70% 95% at 28% 12%, #dff1fb 0%, #eaf6f5 48%, #ddeeed 100%); }
+html[data-mode="dark"] .qimg.draw { color: #f4fbfa; background: radial-gradient(70% 95% at 28% 12%, #217f80 0%, #13595b 48%, #0b4140 100%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); }
+.qimg.draw svg { height: 100%; width: auto; display: block; }
+.qimg .ink { fill: none; stroke: currentColor; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; }
+.qimg .gold { fill: var(--deco, #c9a45c); }
+.qimg .gold-line { fill: none; stroke: var(--deco, #c9a45c); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; }
+.qimg .soft { fill: currentColor; opacity: .14; }
+.qimg .glow { fill: url(#glowGrad); }
+.qimg .badge { display: none; }
+
+/* подсчёт и текст перед результатами */
+html[data-skin="emerald"] .calc p { font-family: var(--font-display); font-weight: 600; }
+html[data-skin="emerald"] .before p { font-size: 15.5px; line-height: 1.42; }
+html[data-skin="emerald"] .before p:first-child { font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1.3; color: var(--ink); }
+
+/* результат со значками */
+html[data-skin="emerald"] .res { gap: 18px; }
+html[data-skin="emerald"] .res h1 { font-weight: 800; font-size: clamp(30px, 8.6vw, 40px); line-height: 1.08; letter-spacing: -.01em; }
+html[data-skin="emerald"] .res h1 em { font-style: normal; color: var(--gold); }
+html[data-skin="emerald"] .profile { border: 1px solid var(--line); border-radius: 18px; padding: 16px; background: var(--surface); }
+html[data-skin="emerald"] .prow.lead .pbar i { background: var(--gold); }
+html[data-skin="emerald"] .rtext { font-size: 16.5px; line-height: 1.42; gap: 12px; }
+html[data-skin="emerald"] .rtext .strategy { font-family: var(--font-body); font-style: normal; font-weight: 600; font-size: 18.5px; line-height: 1.32; padding: 16px 18px; border: 0; border-radius: 18px; background: var(--gold-soft); }
+html[data-skin="emerald"] .rtext h3 { display: flex; align-items: center; gap: 12px; margin: 14px 0 0; text-transform: none; letter-spacing: 0; font-size: 19px; line-height: 1.2; font-weight: 700; color: var(--ink); }
+.ico { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--gold-soft); color: var(--gold); }
+.ico svg { width: 21px; height: 21px; display: block; }
+html[data-skin="emerald"] .life { gap: 10px; }
+html[data-skin="emerald"] .life li { display: grid; grid-template-columns: 38px 1fr; gap: 12px; align-items: start; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+html[data-skin="emerald"] .life b { font-weight: 700; color: var(--ink); }
+html[data-skin="emerald"] .change { border: 1px solid var(--gold); border-radius: 18px; background: var(--gold-soft); padding: 16px; }
+html[data-skin="emerald"] .change small { display: flex; align-items: center; gap: 10px; text-transform: none; letter-spacing: 0; font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+html[data-skin="emerald"] .change .ico { background: var(--gold); color: var(--gold-ink); }
+html[data-skin="emerald"] .change p { font-size: 16.5px; }
+
+/* видео сразу под результатом */
+.vblock { display: grid; gap: 14px; margin-top: 10px; padding-top: 22px; border-top: 1px solid var(--line); }
+.vcover { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: 20px; overflow: hidden; background: #0f4f4e; }
+.vcover img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; transition: transform .4s ease; }
+.vcover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 40, 40, 0) 40%, rgba(10, 40, 40, .45) 100%); }
+.vcover .play {
+  position: absolute; left: 50%; top: 50%; z-index: 1; width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff;
+  background: rgba(255, 255, 255, .28); border: 1px solid rgba(255, 255, 255, .6);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.vcover .play svg { width: 30px; height: 30px; margin-left: 3px; }
+@media (hover: hover) { .vcover:hover img { transform: scale(1.03); } }
+.vblock .ftext { margin: 4px 0 0; text-align: center; font-size: 16.5px; line-height: 1.42; }
+.vblock h2 { margin: 0 0 4px; text-align: center; font-family: var(--font-display); font-weight: 800; font-size: clamp(23px, 6.6vw, 28px); line-height: 1.15; text-wrap: balance; color: var(--gold); }
+html[data-skin="emerald"][data-mode="dark"] .vblock h2 { color: var(--ink); }
+.res > .links { margin-top: 2px; }
