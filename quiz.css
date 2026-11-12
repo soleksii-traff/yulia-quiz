@@ -723,3 +723,6 @@ html[data-skin="emerald"] .count, html[data-skin="emerald"] .prow { font-size: 1
 .ico.drawn .d-gold { fill: var(--deco, #c9a45c); stroke: currentColor; stroke-width: 1.9; stroke-linejoin: round; }
 html[data-skin="emerald"] .life li { grid-template-columns: 44px 1fr; gap: 12px; align-items: center; }
 html[data-skin="emerald"][data-mode="dark"] .ico.drawn { color: var(--ink); }
+
+/* рисунки к вопросам без рамки, прямо на фоне (alejo 12.11) */
+.qimg.draw, html[data-mode="dark"] .qimg.draw { background: none; box-shadow: none; border-radius: 0; height: 140px; place-items: center start; margin: 0 0 6px -14px; overflow: visible; }
