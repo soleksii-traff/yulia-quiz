@@ -223,8 +223,7 @@
     var head = el("div", "hero-head");
     var cc = el("div", "crown"); cc.innerHTML = crownSvg;
     head.append(cc, el("p", "eyebrow", C.labels.cover), el("h1", null, C.title));
-    var by = el("p", "byline");
-    by.append(el("b", null, C.author.name), document.createTextNode(" · " + C.author.role));
+    /* подпись «Юлия Мартынюк · психолог-психотерапевт» убрана (alejo 12.11): она повторяет приветствие */
     var text = el("div", "hero-text");
     C.intro.forEach(function (t, i) { var p = el("p", null, t); p.style.animationDelay = (250 + i * 90) + "ms"; text.appendChild(p); });
     var box = el("div", "answers");
@@ -233,7 +232,7 @@
     preload(0);
     box.appendChild(go);
     if (C.introNote) box.appendChild(el("p", "note", C.introNote));
-    body.append(hero, head, by, text, box);
+    body.append(hero, head, text, box);
   }
 
   async function intro() {
