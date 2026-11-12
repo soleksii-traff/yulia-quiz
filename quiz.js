@@ -267,12 +267,13 @@
   /* Картинка к вопросу во всю ширину (illus в config: "draw" — рисунок, "photo" — фото) */
   var illus = (function () { var m = location.search.match(/[?&]illus=(draw|photo|none)/); var k = m ? m[1] : C.illus; return k === "draw" || k === "photo" ? k : ""; })();
   if (illus) document.documentElement.setAttribute("data-illus", illus);
-  if (illus === "draw" && window.QUIZ_ILLUS) {
+  if ((illus === "draw" && window.QUIZ_ILLUS) || C.resultIcons) {
     /* общие заготовки рисунков: голубое свечение и «дрожание» линии от руки */
     var defs = document.createElement("div");
     defs.innerHTML = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' +
       '<radialGradient id="glowGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#bdf1f1" stop-opacity=".75"/><stop offset="55%" stop-color="#8fdde0" stop-opacity=".28"/><stop offset="100%" stop-color="#8fdde0" stop-opacity="0"/></radialGradient>' +
       '<filter id="hand" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="1.8"/></filter>' +
+      '<filter id="handS" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>' +
       '</defs></svg>';
     document.body.appendChild(defs.firstChild);
   }
@@ -431,7 +432,7 @@
     }
 
     var I = C.resultIcons;
-    function h3(text, ico) { var h = el("h3"); if (I) h.appendChild(icon(ico)); h.appendChild(el("span", null, text)); return h; }
+    function h3(text) { var h = el("h3"); h.appendChild(el("span", null, text)); return h; }
     var t = el("div", "rtext" + (I ? " with-icons" : ""));
     t.appendChild(el("p", "strategy", M.strategy));
     M.intro.forEach(function (x) { t.appendChild(el("p", null, x)); });
@@ -441,7 +442,7 @@
     var ul = el("ul", "life");
     M.life.forEach(function (x) {
       var li = el("li");
-      if (I) { li.appendChild(icon(lifeIcon(x[0]))); var d = el("div"); d.append(el("b", null, x[0]), document.createTextNode(" " + x[1])); li.appendChild(d); }
+      if (I) { li.appendChild(drawn(lifeIcon(x[0]))); var d = el("div"); d.append(el("b", null, x[0]), document.createTextNode(" " + x[1])); li.appendChild(d); }
       else li.append(el("b", null, x[0]), document.createTextNode(" " + x[1]));
       ul.appendChild(li);
     });
@@ -449,7 +450,7 @@
     t.appendChild(h3(C.labels.hurts, "wall"));
     t.appendChild(el("p", null, M.hurts));
     var ch = el("div", "change");
-    var sm = el("small"); if (I) sm.appendChild(icon("key")); sm.appendChild(el("span", null, C.labels.change));
+    var sm = el("small"); sm.appendChild(el("span", null, C.labels.change));
     ch.append(sm, el("p", null, M.change));
     t.appendChild(ch);
     body.appendChild(t);
@@ -476,6 +477,21 @@
     star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
     play: '<path d="M9 6.5v11l9-5.5z" fill="currentColor" stroke="none"/>'
   };
+  /* Рисованные значки к пунктам «В деньгах», «В отношениях»…: линия от руки + одна золотая деталь, как рисунки к вопросам */
+  var DRAWN = {
+    coin: '<ellipse class="d-gold" cx="22" cy="17" rx="11" ry="4"/><path class="d-ink" d="M11 17v6c0 2.2 4.9 4 11 4s11-1.8 11-4v-6M11 23v6c0 2.2 4.9 4 11 4s11-1.8 11-4v-6M11 29v6c0 2.2 4.9 4 11 4s11-1.8 11-4v-6"/><path class="d-ink" d="M39 7v6M36 10h6"/>',
+    heart: '<path class="d-ink" d="M19 40S6 32.5 6 22.5A7 7 0 0 1 19 18.6 7 7 0 0 1 32 22.5C32 32.5 19 40 19 40z"/><path class="d-gold" d="M34 23s-6-3.6-6-8.4a3.4 3.4 0 0 1 6-2.1 3.4 3.4 0 0 1 6 2.1c0 4.8-6 8.4-6 8.4z"/>',
+    sun: '<path class="d-ink" d="M8 22L24 9l16 13M12 19v20h24V19"/><path class="d-gold" d="M20 39V28h8v11z"/><path class="d-ink" d="M31 13V8h4v8"/>',
+    cup: '<path class="d-gold" d="M10 21h21v7a9.5 9.5 0 0 1-9.5 9.5h-2A9.5 9.5 0 0 1 10 28z"/><path class="d-ink" d="M31 23h3a4.5 4.5 0 0 1 0 9h-3M7 41h28M16 7c-2.5 3 2.5 5.5 0 9M23 7c-2.5 3 2.5 5.5 0 9"/>',
+    compass: '<path class="d-ink" d="M24 7v34M16 41h16"/><path class="d-gold" d="M24 11h12l4 4.5-4 4.5H24z"/><path class="d-ink" d="M24 23H12l-4 4.5 4 4.5h12z"/>',
+    star: '<path class="d-gold" d="M22 9l4.3 8.8 9.7 1.4-7 6.8 1.7 9.6-8.7-4.6-8.7 4.6 1.7-9.6-7-6.8 9.7-1.4z"/><path class="d-ink" d="M39 6v6M36 9h6M38 32v5M35.5 34.5h5"/>'
+  };
+  function drawn(k) {
+    var s = el("span", "ico drawn");
+    s.setAttribute("aria-hidden", "true");
+    s.innerHTML = '<svg viewBox="0 0 48 48"><g filter="url(#handS)">' + (DRAWN[k] || DRAWN.sun) + '</g></svg>';
+    return s;
+  }
   function icon(k) {
     var s = el("span", "ico");
     s.setAttribute("aria-hidden", "true");
