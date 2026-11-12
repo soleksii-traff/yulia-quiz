@@ -726,3 +726,7 @@ html[data-skin="emerald"][data-mode="dark"] .ico.drawn { color: var(--ink); }
 
 /* рисунки к вопросам без рамки, прямо на фоне (alejo 12.11) */
 .qimg.draw, html[data-mode="dark"] .qimg.draw { background: none; box-shadow: none; border-radius: 0; height: 140px; place-items: center start; margin: 0 0 6px -14px; overflow: visible; }
+
+/* после удаления подписи: больше воздуха между заголовком и приветствием (alejo 12.11) */
+.app .hero-head + .hero-text { margin-top: 30px; }
+html[data-skin] .app .hero-head + .hero-text { margin-top: 36px; }
