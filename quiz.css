@@ -730,3 +730,8 @@ html[data-skin="emerald"][data-mode="dark"] .ico.drawn { color: var(--ink); }
 /* после удаления подписи: больше воздуха между заголовком и приветствием (alejo 12.11) */
 .app .hero-head + .hero-text { margin-top: 30px; }
 html[data-skin] .app .hero-head + .hero-text { margin-top: 36px; }
+
+/* тёмная «Изумруд»: весь текст белый (alejo 12.11). Бирюзовый остаётся только у графики: полосы, кружки с буквами, стрелки */
+html[data-skin="emerald"][data-mode="dark"] { --ink: #ffffff; --ink-2: #ffffff; }
+html[data-skin="emerald"][data-mode="dark"] :is(.eyebrow, .msg[data-n]::before, .res h1 em, .vblock h2, .link, .count, .note, .prow, .prow:not(.lead), .before p, .msg.scene, .hero-text p, .byline, .ico.drawn) { color: #ffffff; }
+html[data-skin="emerald"][data-mode="dark"] .msg[data-n]::before { color: #ffffff; }
