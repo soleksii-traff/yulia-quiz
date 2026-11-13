@@ -744,3 +744,26 @@ html[data-skin] .hero-text mark { color: inherit; padding: 0 1px; background: li
 html[data-skin][data-mode="dark"] .hero-text mark { background: linear-gradient(transparent 56%, rgba(228, 196, 126, .5) 56%, rgba(228, 196, 126, .5) 94%, transparent 94%); }
 html[data-skin] .hero-text b { font-weight: 600; color: var(--ink); }
 html[data-skin] .hero-text p.call { font-family: var(--font-display); font-size: min(20px, calc((100vw - 32px) / 20.8)); line-height: 1.28; color: var(--ink); margin-top: 16px; -webkit-text-stroke: 0; }
+
+/* «Изумруд»: фото на первом экране растворяется в фоне прозрачностью, а не заливкой цветом —
+   иначе на тёмной под фото виден переход к свечению фона (alejo 13.11) */
+html[data-skin="emerald"] .hero-img img { -webkit-mask-image: linear-gradient(180deg, #000 48%, transparent 98%); mask-image: linear-gradient(180deg, #000 48%, transparent 98%); }
+html[data-skin="emerald"] .hero-img::after { background: linear-gradient(180deg, rgba(0, 0, 0, .22) 0%, transparent 22%); }
+
+/* Свечение фона — на отдельном слое, закреплённом на экране. На iPhone background-attachment: fixed не работает,
+   и градиент повторялся бы при прокрутке с заметным швом. */
+html[data-skin="emerald"] body { background: var(--bg); }
+html[data-skin="emerald"] body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(85% 42% at 50% -6%, var(--glow), transparent 70%),
+    radial-gradient(55% 35% at 100% 18%, rgba(113, 204, 199, .16), transparent 70%),
+    var(--bg);
+}
+html[data-skin="emerald"][data-mode="dark"] body::before {
+  background:
+    radial-gradient(80% 45% at 50% -6%, var(--glow), transparent 68%),
+    radial-gradient(60% 50% at 0% 35%, rgba(113, 204, 199, .2), transparent 70%),
+    radial-gradient(70% 50% at 100% 100%, rgba(8, 40, 40, .55), transparent 70%),
+    var(--bg);
+}
