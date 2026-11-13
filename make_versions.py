@@ -12,7 +12,7 @@ V = {
   'v7': ('Изумруд, тёмная, рисунки', '{ introStyle: "photo", skin: "emerald", heroPhoto: "yulia_powder.jpg", videoCover: "yulia_big.jpg", themeLock: true, resultIcons: true, resultVideo: true, theme: "dark", illus: "draw" }'),
   'v8': ('Изумруд, тёмная, фото', '{ introStyle: "photo", skin: "emerald", heroPhoto: "yulia_powder.jpg", videoCover: "yulia_big.jpg", themeLock: true, resultIcons: true, resultVideo: true, theme: "dark", illus: "photo" }'),
   'v9': ('Итоговая: изумруд, рисунки, светлая + переключатель', '{ introStyle: "photo", skin: "emerald", heroPhoto: "yulia_powder.jpg", videoCover: "yulia_big.jpg", resultIcons: true, resultVideo: true, theme: "light", themeKey: "quiz_theme_v9", illus: "draw" }'),
-  'v10': ('Итоговая: изумруд, фото, светлая + переключатель', '{ introStyle: "photo", skin: "emerald", heroPhoto: "yulia_powder.jpg", videoCover: "yulia_big.jpg", resultIcons: true, resultVideo: true, theme: "light", themeKey: "quiz_theme_v10", illus: "photo" }'),
+  'v10': ('Итоговая: изумруд, фото, светлая + переключатель', '{ introStyle: "photo", skin: "emerald", heroPhoto: "yulia_powder.jpg", videoCover: "yulia_big.jpg", resultIcons: true, resultVideo: true, theme: "light", themeKey: "quiz_theme_v10", illus: "photo", introAccent: true }'),
 }
 for k, (name, cfg) in V.items():
     h = base.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<base href="../">')

@@ -226,6 +226,7 @@
     /* подпись «Юлия Мартынюк · психолог-психотерапевт» убрана (alejo 12.11): она повторяет приветствие */
     var text = el("div", "hero-text");
     C.intro.forEach(function (t, i) { var p = el("p", null, t); p.style.animationDelay = (250 + i * 90) + "ms"; text.appendChild(p); });
+    if (C.introAccent) accentIntro(text);
     var box = el("div", "answers");
     var go = el("button", "btn", C.startButton);
     go.onclick = function () { root.classList.remove("has-hero"); track("quiz_start"); question(0); };
@@ -233,6 +234,22 @@
     box.appendChild(go);
     if (C.introNote) box.appendChild(el("p", "note", C.introNote));
     body.append(hero, head, text, box);
+  }
+
+  /* Вариант А: маркер и жирный на ключевых фразах (introMarks), последний абзац крупно. Текст тот же, меняются только теги. */
+  function accentIntro(text) {
+    var P = text.querySelectorAll("p");
+    (C.introMarks || []).forEach(function (m) {
+      var p = P[m[0]]; if (!p) return;
+      for (var n = p.firstChild; n; n = n.nextSibling) {
+        if (n.nodeType !== 3) continue;
+        var i = n.nodeValue.indexOf(m[1]); if (i < 0) continue;
+        var rest = n.splitText(i); rest.splitText(m[1].length);
+        var w = document.createElement(m[2] === "b" ? "b" : "mark"); w.textContent = m[1];
+        p.replaceChild(w, rest); return;
+      }
+    });
+    if (P.length) P[P.length - 1].classList.add("call");
   }
 
   async function intro() {

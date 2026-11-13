@@ -738,3 +738,9 @@ html[data-skin="emerald"][data-mode="dark"] .msg[data-n]::before { color: #fffff
 /* тёмная: буквы ответов — зелёные в белых кружках (alejo 12.11) */
 html[data-skin="emerald"][data-mode="dark"] .opt .lt { background: #ffffff; color: #0f4f4e; }
 html[data-skin="emerald"][data-mode="dark"] .opt::after { border-color: #ffffff; }
+
+/* Приветствие, вариант А (alejo 13.11): мятный маркер на светлой, золотой на тёмной; последний абзац размером как «Привет!…» */
+html[data-skin] .hero-text mark { color: inherit; padding: 0 1px; background: linear-gradient(transparent 56%, rgba(166, 229, 223, .75) 56%, rgba(166, 229, 223, .75) 94%, transparent 94%); }
+html[data-skin][data-mode="dark"] .hero-text mark { background: linear-gradient(transparent 56%, rgba(228, 196, 126, .5) 56%, rgba(228, 196, 126, .5) 94%, transparent 94%); }
+html[data-skin] .hero-text b { font-weight: 600; color: var(--ink); }
+html[data-skin] .hero-text p.call { font-family: var(--font-display); font-size: 20px; line-height: 1.28; color: var(--ink); margin-top: 16px; -webkit-text-stroke: 0; }
