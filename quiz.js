@@ -18,8 +18,8 @@
     powder: { light: "#f5f1ee", dark: "#400f1c", fonts: "family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;600" },
     sky: { light: "#7a9cb3", fonts: "family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;500" },
     /* «Изумруд» по словам Юлии: цвет стен её дома, голубое свечение сзади, белый вместо бежевого.
-       Шрифты как «Poster» и «Deco» из её сторис (выбор alejo 12.11): Yeseva One — заголовки, Poiret One — текст. */
-    emerald: { light: "#ffffff", dark: "#0f4f4e", fonts: "family=Yeseva+One&family=Poiret+One" }
+       Шрифты как «Poster» и «Deco» из её сторис (выбор alejo 12.11): Yeseva One — заголовки; текст с 14.11 — Tenor Sans (выбор Юлии), Poiret One плохо читался. */
+    emerald: { light: "#ffffff", dark: "#0f4f4e", fonts: "family=Yeseva+One&family=Tenor+Sans" }
   };
   var skin = (function () { var q = new URLSearchParams(location.search).get("skin"); var k = q != null ? q : C.skin; return SKINS[k] ? k : ""; })();
   function setTheme(t) {
@@ -249,6 +249,14 @@
         p.replaceChild(w, rest); return;
       }
     });
+    /* introQuote: абзац с вопросами — каждый вопрос с новой строки, с золотой чертой слева (вариант Б, alejo 14.11) */
+    var qp = C.introQuote != null ? P[C.introQuote] : null;
+    if (qp) {
+      var parts = qp.textContent.split(/\?\s+/);
+      qp.textContent = "";
+      parts.forEach(function (t, i) { qp.appendChild(el("span", "ln", t + (i < parts.length - 1 ? "?" : ""))); });
+      qp.classList.add("quote");
+    }
     if (P.length) P[P.length - 1].classList.add("call");
   }
 
