@@ -239,16 +239,6 @@
   /* Вариант А: маркер и жирный на ключевых фразах (introMarks), последний абзац крупно. Текст тот же, меняются только теги. */
   function accentIntro(text) {
     var P = text.querySelectorAll("p");
-    (C.introMarks || []).forEach(function (m) {
-      var p = P[m[0]]; if (!p) return;
-      for (var n = p.firstChild; n; n = n.nextSibling) {
-        if (n.nodeType !== 3) continue;
-        var i = n.nodeValue.indexOf(m[1]); if (i < 0) continue;
-        var rest = n.splitText(i); rest.splitText(m[1].length);
-        var w = document.createElement(m[2] === "b" ? "b" : "mark"); w.textContent = m[1];
-        p.replaceChild(w, rest); return;
-      }
-    });
     /* introQuote: абзац с вопросами — каждый вопрос с новой строки, с золотой чертой слева (вариант Б, alejo 14.11) */
     var qp = C.introQuote != null ? P[C.introQuote] : null;
     if (qp) {
@@ -257,6 +247,18 @@
       parts.forEach(function (t, i) { qp.appendChild(el("span", "ln", t + (i < parts.length - 1 ? "?" : ""))); });
       qp.classList.add("quote");
     }
+    /* introMarks: "b" — жирный, "mark" — маркер, "nw" — фраза не переносится на другую строку */
+    (C.introMarks || []).forEach(function (m) {
+      var p = P[m[0]]; if (!p) return;
+      var w = document.createTreeWalker(p, NodeFilter.SHOW_TEXT), n;
+      while ((n = w.nextNode())) {
+        var i = n.nodeValue.indexOf(m[1]); if (i < 0) continue;
+        var rest = n.splitText(i); rest.splitText(m[1].length);
+        var t = m[2] === "nw" ? el("span", "nw") : document.createElement(m[2] === "b" ? "b" : "mark");
+        t.textContent = m[1];
+        rest.parentNode.replaceChild(t, rest); return;
+      }
+    });
     if (P.length) P[P.length - 1].classList.add("call");
   }
 

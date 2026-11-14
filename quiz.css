@@ -743,7 +743,7 @@ html[data-skin="emerald"][data-mode="dark"] .opt::after { border-color: #ffffff;
 html[data-skin] .hero-text mark { color: inherit; padding: 0 1px; background: linear-gradient(transparent 56%, rgba(166, 229, 223, .75) 56%, rgba(166, 229, 223, .75) 94%, transparent 94%); }
 html[data-skin][data-mode="dark"] .hero-text mark { background: linear-gradient(transparent 56%, rgba(228, 196, 126, .5) 56%, rgba(228, 196, 126, .5) 94%, transparent 94%); }
 html[data-skin] .hero-text b { font-weight: 600; color: var(--ink); }
-html[data-skin] .hero-text p.call { font-family: var(--font-display); font-size: min(20px, calc((100vw - 32px) / 20.8)); line-height: 1.28; color: var(--ink); margin-top: 16px; -webkit-text-stroke: 0; }
+html[data-skin] .hero-text p.call { font-family: var(--font-display); font-size: min(20px, calc((100vw - 32px) / 21.5)); line-height: 1.28; white-space: pre; -webkit-text-size-adjust: 100%; color: var(--ink); margin-top: 16px; -webkit-text-stroke: 0; }
 
 /* «Изумруд»: фото на первом экране растворяется в фоне прозрачностью, а не заливкой цветом —
    иначе на тёмной под фото виден переход к свечению фона (alejo 13.11) */
@@ -783,3 +783,4 @@ html[data-skin="emerald"] .note { font-size: 12px; }
 html[data-skin] .hero-text p.quote { font-family: var(--font-display); font-size: 17.5px; line-height: 1.26; color: var(--ink); border-left: 2px solid var(--gold-real, #c9a45c); padding: 2px 0 2px 16px; margin: 18px 0; -webkit-text-stroke: 0; }
 html[data-skin] .hero-text p.quote .ln { display: block; }
 html[data-skin] .hero-text p.quote .ln + .ln { margin-top: 14px; }
+.hero-text .nw { white-space: nowrap; }
