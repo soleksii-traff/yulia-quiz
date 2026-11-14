@@ -1,7 +1,8 @@
-# Собирает папки v1…v10: та же страница, но с другими настройками первого экрана и оформления
+# Собирает папки v1…v10 из template.html: та же страница, но с другими настройками первого экрана и оформления.
+# Корень сайта (index.html) = v10, выбранная версия (alejo 14.11).
 import pathlib, re
 d = pathlib.Path(__file__).parent
-base = (d/'index.html').read_text()
+base = (d/'template.html').read_text()  # шаблон страницы; ?v= для сброса кэша менять здесь
 V = {
   'v1': ('Переписка', '{ introStyle: "chat" }'),
   'v2': ('Фото на первом экране, светлая тема', '{ introStyle: "photo", theme: "light", themeKey: "quiz_theme_v2" }'),
@@ -21,3 +22,10 @@ for k, (name, cfg) in V.items():
     (d/k).mkdir(exist_ok=True)
     (d/k/'index.html').write_text(h)
 print('ok')
+
+# Главная страница квиза = v10 (без <base>, файлы рядом)
+name, cfg = V['v10']
+h = re.sub(r'(<script src="config\.js[^"]*"></script>)', r'\1\n<script>window.QUIZ_VARIANT = ' + cfg + ';</script>', base)
+h = h.replace('<title>Тест — Юлия Мартынюк</title>', '<title>Тест — Юлия Мартынюк</title>\n<!-- главная = v10: ' + name + '. Не править вручную: собирается make_versions.py из template.html -->')
+(d/'index.html').write_text(h)
+print('index = v10')
